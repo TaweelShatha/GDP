@@ -95,6 +95,13 @@ h5 {
 h6 {
      font-size: 13px
 }
+hr{
+     border-width: 7px;
+     color: #00000000;
+     border-color: #000000;
+     width: 500px;
+     align-self: center;
+}
 
 *,
 *::after,
@@ -1042,7 +1049,7 @@ ul.location_icon li a:hover {
 
 .copyright {
      background-color: #0f98f8;
-     margin-top: 70px;
+     margin-top: 30px;
      padding: 20px 0;
 }
 
@@ -1082,7 +1089,7 @@ ul.location_icon li a:hover {
      height: 160px;
      align-content: center;
      width: 100%;
-     padding: 10px 0px 0px 0;
+     padding: 5px 0px 0px 0;
 }
 
 .footer_2 {
@@ -1099,36 +1106,159 @@ ul.location_icon li a:hover {
      display: flex ;
      flex-wrap: wrap;
      width: 100%;
-     padding: 0px 20px 0px 20px;
+     padding: 0px 0px 0px 20px;
 }
 
 .menu_box {
      text-align: center;
      width: 10%;
-     margin-top: 30px !important;
+     margin-top: 20px !important;
 }
 
 .menu_box i {
-     width: 150px;
+     width: 120px;
      display: block;
-     height: 150px;
-     border-radius: 150px;
+     height: 120px;
+     border-radius: 120px;
 }
 
 .menu_box i img {
      text-align: center;
      padding-top: 20%;
+     width: 65%;
 }
 
 .menu_box h4 {
-     color: #494949;
-     font-size: 17px;
+     color: #000000;
+     font-size: 18px;
+     font-weight: bolder;
      margin-top: 25px;
      padding: 0;
      font-weight: 500;
 }
 
-.menu_box h4:hover {
-     color: #0f98f8;
+.crudmenustation {
+     width: 0;
+     height: 70%;
+     top: 0;
+     left: 0;
+     background-color: #0f98f8;
+     overflow-x: hidden;
+     display: none;
+     transition: 0.5s;
+     padding-top: 60px;
 }
 
+.crudmenustation a {
+     padding: 8px 8px 8px 32px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #fff;
+     display: block;
+     transition: 0.3s;
+}
+
+.crudmenustation a:hover {
+     color: #ffffff;
+}
+
+
+.crudmenubus {
+     width: 0;
+     height: 70%;
+     top: 0;
+     left: 0;
+     display: none;
+     background-color: #fe7506;
+     overflow-x: hidden;
+     transition: 0.5s;
+     padding-top: 60px;
+}
+
+.crudmenubus a {
+     padding: 8px 8px 8px 32px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #fff;
+     display: block;
+     transition: 0.3s;
+}
+
+.crudmenubus a:hover {
+     color: #ffffff;
+}
+
+.crudmenuroute {
+     width: 0;
+     height: 70%;
+     top: 0;
+     left: 0;
+     display: none;
+     background-color: #fed806;
+     overflow-x: hidden;
+     transition: 0.5s;
+     padding-top: 60px;
+}
+
+.crudmenuroute a {
+     padding: 8px 8px 8px 32px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #fff;
+     display: block;
+     transition: 0.3s;
+}
+
+.crudmenuroute a:hover {
+     color: #ffffff;
+}
+.crudmenudriver {
+     width: 0;
+     height: 70%;
+     top: 0;
+     left: 0;
+     display: none;
+     background-color: #fe7506;
+     overflow-x: hidden;
+     transition: 0.5s;
+     padding-top: 60px;
+}
+
+.crudmenudriver a {
+     padding: 8px 8px 8px 32px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #fff;
+     display: block;
+     transition: 0.3s;
+}
+
+.crudmenudriver a:hover {
+     color: #ffffff;
+}
+
+
+.crudmenuschedule {
+     width: 0;
+     height: 70%;
+     top: 0;
+     left: 0;
+     display: none;
+     background-color: #fed806;
+     overflow-x: hidden;
+     transition: 0.5s;
+     padding-top: 60px;
+}
+
+.crudmenuschedule a {
+     padding: 8px 8px 8px 32px;
+     text-decoration: none;
+     font-size: 18px;
+     color: #fff;
+     display: block;
+     transition: 0.3s;
+}
+
+.crudmenuschedule  a:hover {
+     color: #ffffff;
+}

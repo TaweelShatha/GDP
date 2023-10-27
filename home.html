@@ -6,18 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>Login</title>
+    <title>Home</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" href="images/logo.png" type="image/gif" />
+    <link rel="icon" type="image/png" href="images/logo.png">
     <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
         media="screen">
 </head>
 
-<body>
+<body
+    style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
     <div class="loader_bg">
         <div class="loader"><img src="images/loading.gif" alt="#" /></div>
     </div>
@@ -26,30 +27,70 @@
         <a href="index.html"><img src="images/name.png" alt="#" class="nameimg" /></a>
 
     </header>
-    <div class="menu_main">
-        <div class="menu_box blu_colo">
+    <div class="menu_main" style="padding-left: 320px;">
+        <div class="menu_box blu_colo" onclick="openNav('station')" style="cursor: pointer;">
             <i><img src="images/station.png" alt="#" width="100px" /></i>
             <h4>Stations</h4>
         </div>
-        <div class="menu_box yelldark_colo">
-            <i><img src="images/bus.png" alt="#" width="100px" /></i>
+        <div class="menu_box yelldark_colo" onclick="openNav('bus')" style="cursor: pointer;">
+            <i><img src="images/bus.png" alt="#" /></i>
             <h4>Buses </h4>
         </div>
-        <div class="menu_box yell_colo">
-            <i><img src="images/route.png" alt="#" width="100px" /></i>
+        <div class="menu_box yell_colo" onclick="openNav('route')" style="cursor: pointer;">
+            <i><img src="images/route.png" alt="#" /></i>
             <h4> Routes</h4>
         </div>
-        <div class="menu_box yelldark_colo">
-            <i><img src="images/driver.png" alt="#" width="100px" /></i>
+        <div class="menu_box yelldark_colo" onclick="openNav('driver')" style="cursor: pointer;">
+            <i><img src="images/driver.png" alt="#" /></i>
             <h4>Drivers</h4>
         </div>
-        <div class="menu_box yell_colo">
-            <i><img src="images/schedule.png" alt="#" width="100px" /></i>
-            <h4>Schedules</h4>
+        <div class="menu_box yell_colo" onclick="openNav('sched')" style="cursor: pointer;">
+            <i><img src="images/schedule.png" alt="#" /></i>
+            <h4>My Profile</h4>
         </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <div id="station" class="crudmenustation">
+        <a href="index.html"><img src="images/plus.png" width="50px" height="50px" /> &nbsp;Add a new station
+        </a>
+        <a href="#about"><img src="images/edit.png" width="50px" height="50px" /> &nbsp;Edit a station</a>
+        <a href="#service"><img src="images/delete.png" width="50px" height="50px" />&nbsp; Delete a station
+        </a>
+        <a href="map.html"><img src="images/view.png" width="50px" height="50px" />&nbsp; View stations on map</a>
 
+    </div>
+    <div id="bus" class="crudmenubus">
+        <a href="index.html"><img src="images/plus.png" width="50px" height="50px" /> &nbsp;Add a new bus
+        </a>
+        <a href="#about"><img src="images/edit.png" width="50px" height="50px" /> &nbsp;Edit a bus</a>
+        <a href="#service"><img src="images/delete.png" width="50px" height="50px" />&nbsp; Delete a bus
+        </a>
+        <a href="map.html"><img src="images/view.png" width="50px" height="50px" />&nbsp; View buses on map</a>
 
+    </div>
+    <div id="route" class="crudmenuroute">
+        <a href="index.html"><img src="images/plus.png" width="50px" height="50px" /> &nbsp;Add a new route
+        </a>
+        <a href="#about"><img src="images/edit.png" width="50px" height="50px" /> &nbsp;Edit a route</a>
+        <a href="#service"><img src="images/delete.png" width="50px" height="50px" />&nbsp; Delete a route
+        </a>
+        <a href="map.html"><img src="images/view.png" width="50px" height="50px" />&nbsp; View routes on map</a>
+
+    </div>
+    <div id="driver" class="crudmenudriver">
+        <a href="index.html"><img src="images/plus.png" width="50px" height="50px" /> &nbsp;Add a new driver
+        </a>
+        <a href="#about"><img src="images/edit.png" width="50px" height="50px" /> &nbsp;Edit a driver</a>
+        <a href="#service"><img src="images/delete.png" width="50px" height="50px" />&nbsp; Delete a driver
+        </a>
+        <a href="#contact"><img src="images/view.png" width="50px" height="50px" />&nbsp; View drivers</a>
+
+    </div>
+    <div id="sched" class="crudmenuschedule">
+
+    </div>
 
     <footer style="padding: 20px 20px 20px 20px;">
         <hr>
@@ -82,7 +123,32 @@
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/custom.js"></script>
     <script>
+        function openNav(s) {
+            let element = document.getElementById(s);
+            let elementIds = ["station", "bus", "route", "driver", "sched"];
+            let elements = [];
+
+            elementIds.forEach(id => {
+                elements.push(document.getElementById(id));
+            });
+
+            elements.forEach(element => {
+                if (element.style.display === "block") {
+                    element.style.display = "none";
+                }
+            });
+
+            if (parseInt(element.style.width) === 0) {
+                element.style.width = "100%";
+                element.style.display = "block";
+            } else {
+                element.style.width = "0";
+                element.style.display = "none";
+
+            }
+        }
     </script>
+
 
 </body>
 
