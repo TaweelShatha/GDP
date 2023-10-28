@@ -68,7 +68,7 @@ h6 {
      padding: 0 0 10px 0;
      font-weight: normal;
      line-height: normal;
-     color: #111111;
+     color: #000000;
      margin: 0
 }
 
@@ -95,13 +95,7 @@ h5 {
 h6 {
      font-size: 13px
 }
-hr{
-     border-width: 7px;
-     color: #00000000;
-     border-color: #000000;
-     width: 500px;
-     align-self: center;
-}
+
 
 *,
 *::after,
@@ -117,13 +111,13 @@ h3 a,
 h4 a,
 h5 a,
 h6 a {
-     color: #212121;
+     color: #000000;
      text-decoration: none!important;
      opacity: 1
 }
 
 button:focus {
-     outline: none;
+     outline: #000000;
 }
 
 ul,
@@ -142,7 +136,7 @@ p {
 }
 
 a {
-     color: #222222;
+     color: #000000;
      text-decoration: none;
      outline: none !important;
 }
@@ -202,9 +196,10 @@ blockquote {
 }
 
 button {
-     border: 0;
-     margin: 0;
-     padding: 0;
+     border: 3;
+    border-radius: 50px;
+    border-width: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
      cursor: pointer;
 }
 
@@ -219,12 +214,6 @@ button {
      margin: 0;
      padding: 0;
 }
-
-
-/**-- heading section --**/
-
-
-/*---------------------------- preloader area ----------------------------*/
 
 .loader_bg {
      position: fixed;
@@ -249,11 +238,6 @@ button {
      width: 280px;
 }
 
-
-/*-- header area --*/
-
-
-/*-- sidebar  navigation--*/
 
 .sidepanel {
      width: 0;
@@ -296,9 +280,6 @@ button {
      border: none;
      margin-left: 16px;
 }
-
-
-/*--      end sidebar  navigation--*/
 
 .logo {
      padding-top: 12px;
@@ -1262,3 +1243,21 @@ ul.location_icon li a:hover {
 .crudmenuschedule  a:hover {
      color: #ffffff;
 }
+
+label{
+     color: #000000;
+     font-size: large;
+     font-weight: bolder;
+
+}
+legend {
+     display: block;
+     padding-left: 2px;
+     padding-right: 2px;
+     color: #000;
+   }
+   fieldset {
+     border: 3px solid #000; 
+     padding:1%; 
+ }
+
