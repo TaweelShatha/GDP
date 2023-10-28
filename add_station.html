@@ -16,22 +16,40 @@
         var marker;
 
         function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 0, lng: 0 },
-                zoom: 8
-            });
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        const myLatLng = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
 
-            marker = new google.maps.Marker({
-                map: map,
-                position: map.getCenter(),
-                draggable: true
-            });
+                        const map = new google.maps.Map(document.getElementById('map'), {
+                            center: myLatLng,
+                            zoom: 12
+                        });
 
-            google.maps.event.addListener(map, 'click', function (event) {
-                marker.setPosition(event.latLng);
-                document.getElementById('latitude').value = event.latLng.lat();
-                document.getElementById('longitude').value = event.latLng.lng();
-            });
+                        const marker = new google.maps.Marker({
+                            map: map,
+                            position: map.getCenter(),
+                            draggable: true
+                        });
+                        google.maps.event.addListener(map, 'click', function (event) {
+                            marker.setPosition(event.latLng);
+                            document.getElementById('latitude').value = event.latLng.lat();
+                            document.getElementById('longitude').value = event.latLng.lng();
+                        });
+                    },
+                    function (error) {
+                        console.error('Error getting user location:', error);
+                    }
+
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+
+
         }
 
         function openMapModal() {
@@ -76,12 +94,12 @@
     </div>
 
 
-    <form action="/submit_station" method="post" style="padding-left: 20px; padding-right: 20px;" >
+    <form action="/submit_station" method="post" style="padding-left: 20px; padding-right: 20px;">
         <fieldset>
             <label for="stationName">Station Name:&nbsp;</label>
             <input type="text" id="stationName" name="stationName" required>
             <br><br>
-            <img src="images/loc.png" width="50px" height="50px"/> &nbsp;
+            <img src="images/loc.png" width="50px" height="50px" /> &nbsp;
             <button type="button" onclick="openMapModal()">Choose Location on Map to fill lon. & lat.</button> <br><br>
             <label for="longitude">Longitud&nbsp;</label>
             <input type="number" id="longitude" name="longitude" required readonly>
@@ -110,22 +128,65 @@
         function addBusInput() {
             var busesContainer = document.getElementById('busesContainer');
             var newBusInput = document.createElement('div');
-        
+
             newBusInput.innerHTML = '<label for="busName">Bus ID:</label>' +
                 '<input type="number" class="busName" name="busName[]" required>' +
                 '&nbsp;<button type="button" onclick="removeBusInput(this)">Remove</button>' +
                 '<br>';
-        
+
             busesContainer.appendChild(newBusInput);
         }
-        
+
         function removeBusInput(button) {
             var busInputDiv = button.parentNode;
             busInputDiv.parentNode.removeChild(busInputDiv);
         }
-        
-    </script>
 
+        function submit_station() {
+            var stationName = document.getElementById('stationName').value;
+            var longitude = parseFloat(document.getElementById('longitude').value);
+            var latitude = parseFloat(document.getElementById('latitude').value);
+
+            var buses = [];
+            var busInputs = document.querySelectorAll('.busName');
+            busInputs.forEach(function (input) {
+                buses.push({
+                    busID: parseInt(input.value)
+                });
+            });
+
+            var stationData = {
+                stationName: stationName,
+                location: {
+                    longitude: longitude,
+                    latitude: latitude
+                },
+                buses: buses
+            };
+
+            fetch('/submit_station', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(stationData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response, if needed
+                    console.log('Response:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+    </script>
+    <br>
+    <a href="home.html">
+        <h1 align="center" style="color: blue; text-decoration: underline;"> <img src="images/ba.png" width="20px"
+                height="20px" /> GO back home</h1>
+    </a>
     <footer>
         <div class="footer bottom_cross1">
             <div class="container">
