@@ -108,40 +108,11 @@
             <input type="number" id="latitude" name="latitude" required readonly>
             <br><br>
 
-            <h3>Buses:</h3>
-            <div id="busesContainer">
-                <div class="busInput">
-                    <label for="busName">Bus ID: &nbsp;</label>
-                    <input type="number" class="busName" name="busName[]" required>
-                    <br>
-                </div>
-            </div>
-
-            <button type="button" onclick="addBusInput()">Add Another Bus</button>
-            <br><br>
-
             <button type="submit">Create Station</button>
         </fieldset>
     </form>
 
     <script>
-        function addBusInput() {
-            var busesContainer = document.getElementById('busesContainer');
-            var newBusInput = document.createElement('div');
-
-            newBusInput.innerHTML = '<label for="busName">Bus ID:</label>' +
-                '<input type="number" class="busName" name="busName[]" required>' +
-                '&nbsp;<button type="button" onclick="removeBusInput(this)">Remove</button>' +
-                '<br>';
-
-            busesContainer.appendChild(newBusInput);
-        }
-
-        function removeBusInput(button) {
-            var busInputDiv = button.parentNode;
-            busInputDiv.parentNode.removeChild(busInputDiv);
-        }
-
         function submit_station() {
             var stationName = document.getElementById('stationName').value;
             var longitude = parseFloat(document.getElementById('longitude').value);
