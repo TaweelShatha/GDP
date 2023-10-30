@@ -118,21 +118,12 @@
             var longitude = parseFloat(document.getElementById('longitude').value);
             var latitude = parseFloat(document.getElementById('latitude').value);
 
-            var buses = [];
-            var busInputs = document.querySelectorAll('.busName');
-            busInputs.forEach(function (input) {
-                buses.push({
-                    busID: parseInt(input.value)
-                });
-            });
-
             var stationData = {
                 stationName: stationName,
                 location: {
                     longitude: longitude,
                     latitude: latitude
                 },
-                buses: buses
             };
 
             fetch('/submit_station', {
@@ -144,7 +135,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    // Handle the response, if needed
                     console.log('Response:', data);
                 })
                 .catch(error => {
