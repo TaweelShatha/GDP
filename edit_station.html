@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>Edit a station</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="icon" href="images/logo.png" type="image/png" />
+
+</head>
+
+<body
+    style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
+    <div class="loader_bg">
+        <div class="loader"><img src="images/loading.gif" alt="#" /></div>
+    </div>
+    <header>
+
+        <a href="index.html"><img src="images/name.png" alt="#" class="nameimg" /></a>
+
+    </header>
+    <h1 align="center" style="font-weight: bolder;">Search for a Station to Edit</h1>
+    <hr style=" border-width: 7px; color: #00000000; border-color: #000000; width: 500px; align-self: center;">
+
+    <form onsubmit="search(); return false;" style="padding-left: 1%;">
+        <fieldset>
+            <label for="stationName">Station Name:</label>
+            <input type="text" id="stationName" name="stationName" placeholder="Enter station name" required>
+
+            <button type="submit" style="padding: 1%;"><img src="images/search.png" width="25px"
+                    height="25px" /></button>
+        </fieldset>
+    </form>
+    <div id="searchResults"></div>
+
+    <form id="editForm">
+        <label for="editName">Station Name:</label>
+        <input type="text" id="editName" name="editName" required>
+        
+    </form>
+
+    <script>
+        function search() {
+            var stationName = document.getElementById('stationName').value;
+
+            var searchData = {
+                stationName: stationName
+            };
+
+            var jsonData = JSON.stringify(searchData);
+
+            fetch('/search', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    displaySearchResults(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function displaySearchResults(results) {
+            var searchResultsContainer = document.getElementById('searchResults');
+            searchResultsContainer.innerHTML = ''; 
+
+            results.forEach(result => {
+                var stationItem = document.createElement('div');
+                stationItem.textContent = result.name;
+
+                stationItem.addEventListener('click', function () {
+                    showEditForm(result);
+                });
+
+                searchResultsContainer.appendChild(stationItem);
+            });
+        }
+
+        function showEditForm(station) {
+            var editForm = document.getElementById('editForm');
+            editForm.style.display = 'block';
+
+            document.getElementById('editName').value = station.name;
+        }
+    </script>
+    <br>
+    <a href="home.html">
+        <h1 align="center" style="color: blue; text-decoration: underline;"> <img src="images/ba.png" width="20px"
+                height="20px" /> GO back home</h1>
+    </a>
+    <footer>
+        <div class="footer bottom_cross1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <ul class="location_icon">
+                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a> Address :
+                                Ramallah -
+                                Palestine </li>
+                            <li><a href="#"><i class="fa fa-phone" aria-hidden="true"></i></a>Phone : 00000000000
+                            </li>
+                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a>Email :
+                                demo@gmail.com
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div class="col-md-8">
+                        <div class="map">
+                            <figure><img src="images/map.png" alt="#" /></figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>© 2023 All Rights Reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </section>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/custom.js"></script>
+
+
+</body>
+
+</html>
