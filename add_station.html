@@ -94,7 +94,7 @@
     </div>
 
 
-    <form action="/submit_station" method="post" style="padding-left: 20px; padding-right: 20px;">
+    <form  style="padding-left: 20px; padding-right: 20px;">
         <fieldset>
             <label for="stationName">Station Name:&nbsp;</label>
             <input type="text" id="stationName" name="stationName" required>
@@ -108,36 +108,46 @@
             <input type="number" id="latitude" name="latitude" required readonly>
             <br><br>
 
-            <button type="submit">Create Station</button>
+            <button type="submit" onclick="submitStation()" >Create Station</button>
         </fieldset>
     </form>
 
     <script>
-        function submit_station() {
+        function submitStation() {
+            event.preventDefault()
             var stationName = document.getElementById('stationName').value;
             var longitude = parseFloat(document.getElementById('longitude').value);
             var latitude = parseFloat(document.getElementById('latitude').value);
-
+ 
             var stationData = {
-                stationName: stationName,
+                name: stationName,
                 longitude: longitude,
                 latitude: latitude,
             };
-
-            fetch('/submit_station', {
+               
+            fetch('http://localhost:8080/api/stations/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(stationData)
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Response:', data);
+                .then(response => {
+                    if(!response.ok){
+                        return response.json().then(
+                            data =>{
+                            alert(data.message)
+                        })
+                        
+                    }else{
+                        alert('Station Add Successfully')
+                        
+                    }
+                    
+                }).then(data=>{
+                    console.log(data);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                
         }
 
     </script>
