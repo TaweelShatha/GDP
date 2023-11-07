@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>Edit a station</title>
+    <title>Create a new Driver</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -24,74 +24,67 @@
         <a href="index.html"><img src="images/name.png" alt="#" class="nameimg" /></a>
 
     </header>
-    <h1 align="center" style="font-weight: bolder;">Search for a Station to Edit</h1>
+    <h1 align="center" style="font-weight: bolder;">Create a New Driver</h1>
     <hr style=" border-width: 7px; color: #00000000; border-color: #000000; width: 500px; align-self: center;">
 
-    <form onsubmit="search(); return false;" style="padding-left: 1%;">
-        <fieldset style="width: 430px;">
-            <label for="stationName">Station Name:</label>
-            <input type="text" id="stationName" name="stationName" placeholder="Enter station name" required>
+    <form onsubmit="sendData()" method="post" style="padding: 1%;">
+        <fieldset>
+            <label for="firstName">Legal First Name:</label>
+            <input type="text" id="firstName" name="firstName" required><br>
 
-            <button type="submit" style="padding: 1%;"><img src="images/search.png" width="25px"
-                    height="25px" /></button>
+            <label for="lastName">Legal Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required><br>
+
+            <label for="idNumber">Driver License Number:</label>
+            <input type="text" id="idNumber" name="idNumber" required><br>
+
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required minlength="8"><br>
+            <button type="submit">Create Driver</button>
         </fieldset>
-    </form>
-    <div id="searchResults"></div>
-
-    <form id="editForm">
-        <label for="editName">Station Name:</label>
-        <input type="text" id="editName" name="editName" required>
-        
     </form>
 
     <script>
-        function search() {
-            var stationName = document.getElementById('stationName').value;
+       
+        function sendData() {
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var idNumber = document.getElementById('idNumber').value;
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var email = document.getElementById('email').value;
+            var username = document.getElementById('username').value;
 
-            var searchData = {
-                stationName: stationName
+            var data = {
+                firstName: firstName,
+                lastName: lastName,
+                idNumber: idNumber,
+                phoneNumber: phoneNumber,
+                email: email,
+                username: username,
             };
 
-            var jsonData = JSON.stringify(searchData);
-
-            fetch('/search', {
-                method: 'GET',
+            fetch('/submit_driver', {
+                method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: jsonData
+                body: JSON.stringify(data),
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    displaySearchResults(data);
+                    console.log('Success:', data);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error:', error);
                 });
         }
-        function displaySearchResults(results) {
-            var searchResultsContainer = document.getElementById('searchResults');
-            searchResultsContainer.innerHTML = ''; 
 
-            results.forEach(result => {
-                var stationItem = document.createElement('div');
-                stationItem.textContent = result.name;
-
-                stationItem.addEventListener('click', function () {
-                    showEditForm(result);
-                });
-
-                searchResultsContainer.appendChild(stationItem);
-            });
-        }
-
-        function showEditForm(station) {
-            var editForm = document.getElementById('editForm');
-            editForm.style.display = 'block';
-
-            document.getElementById('editName').value = station.name;
-        }
     </script>
     <br>
     <a href="home.html">

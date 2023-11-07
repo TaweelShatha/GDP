@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-    <title>Map</title>
+    <title>Delete a station</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -14,7 +14,8 @@
 
 </head>
 
-<body style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
+<body
+    style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
     <div class="loader_bg">
         <div class="loader"><img src="images/loading.gif" alt="#" /></div>
     </div>
@@ -23,8 +24,67 @@
         <a href="index.html"><img src="images/name.png" alt="#" class="nameimg" /></a>
 
     </header>
-    <div id="map" style="height: 400px;"></div>
+    <h1 align="center" style="font-weight: bolder;">Search for a Station to Delete</h1>
+    <hr style=" border-width: 7px; color: #00000000; border-color: #000000; width: 500px; align-self: center;">
 
+    <form onsubmit="search(); return false;" style="padding-left: 1%;">
+        <fieldset style="width: 430px;">
+            <label for="stationName">Station Name:</label>
+            <input type="text" id="stationName" name="stationName" placeholder="Enter station name" required>
+
+            <button type="submit" style="padding: 1%;"><img src="images/search.png" width="25px"
+                    height="25px" /></button>
+        </fieldset>
+    </form>
+    <div id="searchResults"></div>
+
+    <script>
+        function search() {
+            var stationName = document.getElementById('stationName').value;
+
+            var searchData = {
+                stationName: stationName
+            };
+
+            var jsonData = JSON.stringify(searchData);
+
+            fetch('/search', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    displaySearchResults(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function displaySearchResults(results) {
+            var searchResultsContainer = document.getElementById('searchResults');
+            searchResultsContainer.innerHTML = ''; 
+
+            results.forEach(result => {
+                var stationItem = document.createElement('div');
+                stationItem.textContent = result.name;
+
+                stationItem.addEventListener('click', function () {
+                    showEditForm(result);
+                });
+
+                searchResultsContainer.appendChild(stationItem);
+            });
+        }
+    </script>
+    <br>
+    <a href="home.html">
+        <h1 align="center" style="color: blue; text-decoration: underline;"> <img src="images/ba.png" width="20px"
+                height="20px" /> GO back home</h1>
+    </a>
     <footer>
         <div class="footer bottom_cross1">
             <div class="container">
@@ -67,39 +127,7 @@
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="js/custom.js"></script>
-    <script>
-        function initMap() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    function (position) {
-                        const myLatLng = {
-                            lat: position.coords.latitude,
-                            lng: position.coords.longitude
-                        };
 
-                        const map = new google.maps.Map(document.getElementById('map'), {
-                            center: myLatLng,
-                            zoom: 12
-                        });
-
-                        const marker = new google.maps.Marker({
-                            position: myLatLng,
-                            map: map,
-                            title: 'Your Location'
-                        });
-                    },
-                    function (error) {
-                        console.error('Error getting user location:', error);
-                    }
-                );
-            } else {
-                console.error('Geolocation is not supported by this browser.');
-            }
-        }
-    </script>
-    
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD05VOHJUj5MAawaXwZK1PUpq6KZpvYde8&callback=initMap"
-        async defer></script>
 
 </body>
 
