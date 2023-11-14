@@ -14,7 +14,8 @@
 
 </head>
 
-<body style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
+<body
+    style="background: url(images/banner.png); background-repeat: no-repeat;  padding: 100px 0px 0px 0px; width: 100%; background-position: right top;">
     <div class="loader_bg">
         <div class="loader"><img src="images/loading.gif" alt="#" /></div>
     </div>
@@ -76,17 +77,10 @@
                             lat: position.coords.latitude,
                             lng: position.coords.longitude
                         };
-                        const styles =[
-                        {
-                            featureType: "poi.business",
-                            stylers: [{ visibility: "off" }],
-                        }
-                    ];
 
                         const map = new google.maps.Map(document.getElementById('map'), {
                             center: myLatLng,
-                            zoom: 10,
-                            styles: styles
+                            zoom: 10
                         });
 
                         const marker = new google.maps.Marker({
@@ -94,8 +88,8 @@
                             map: map,
                             title: 'Your Location'
                         });
+
                         see_station(map);
-                       
                     },
                     function (error) {
                         console.error('Error getting user location:', error);
@@ -107,30 +101,54 @@
         }
 
         function see_station(map) {
-            let data = [
-                { id: 1, name: 'Albireh Station', longitude: 35.20, latitude: 31.90 },
-                { id: 2, name: 'Ramallah Station', longitude: 35.22, latitude: 31.91 },
-                { id: 3, name: 'Nablus Station', longitude: 35.25, latitude: 32.22 }
-            ];
-            const iconSize = {
-                width: 40, 
-                height: 40  
-            };
-
-            data.forEach(station => {
-                const marker = new google.maps.Marker({
-                    position: { lat: station.latitude, lng: station.longitude },
-                    map: map,
-                    title: station.name,
-                    icon: {
-                        url: 'images/stationpin.png', 
-                        scaledSize: new google.maps.Size(iconSize.width, iconSize.height)
+            const stationData = [];
+            fetch('http://localhost:8080/api/stations')
+                .then((response) => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else {
+                        throw new Error('Failed to fetch stations');
                     }
+                })
+                .then((data) => {
+                    data.forEach((station) => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: station.latitude, lng: station.longitude },
+                            map: map,
+                            title: station.name,
+                            icon: {
+                                url: 'images/stationpin.png',
+                                scaledSize: new google.maps.Size(40, 40)
+                            }
+                        });
+                    });
+                    console.log(data);
+                })
+                .catch((error) => {
+                    console.error(error);
                 });
-            });
+
+            // const data = [
+            //     { id: 1, name: 'Albireh Station', longitude: 35.20, latitude: 31.90 },
+            //     { id: 2, name: 'Ramallah Station', longitude: 35.22, latitude: 31.91 },
+            //     { id: 3, name: 'Nablus Station', longitude: 35.25, latitude: 32.22 }
+            // ];
+          
+
+            // data.forEach(station => {
+            //     const marker = new google.maps.Marker({
+            //         position: { lat: station.latitude, lng: station.longitude },
+            //         map: map,
+            //         title: station.name,
+            //         icon: {
+            //             url: 'images/stationpin.png',
+            //             scaledSize: new google.maps.Size(iconSize.width, iconSize.height)
+            //         }
+            //     });
+            // });
         }
     </script>
-    
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD05VOHJUj5MAawaXwZK1PUpq6KZpvYde8&callback=initMap"
         async defer></script>
 
