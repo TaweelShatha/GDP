@@ -25,7 +25,7 @@
         <a href="index.html"><img src="images/name.png" alt="#" class="nameimg" /></a>
 
     </header>
-    <h1 align="center" style="font-weight: bolder;">Create a New Driver</h1>
+    <h1 align="center" style="font-weight: bolder;">Create a New Route</h1>
     <hr style=" border-width: 7px; color: #00000000; border-color: #000000; width: 500px; align-self: center;">
     <div class="modal" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -86,6 +86,7 @@
                 .catch((error) => {
                     console.error(error);
                 });
+            return stations;
         }
 
         function populateStationDropdown() {
@@ -213,6 +214,10 @@
                                 scaledSize: new google.maps.Size(40, 40)
                             }
                         });
+                        google.maps.event.addListener(marker, 'click', function () {
+                            addSelected(marker.title);
+                            console.log('Marker Clicked:', marker.title);
+                        });
                     });
                     console.log(data);
                 })
@@ -235,15 +240,15 @@
 
         function sendData() {
             const routeName = document.getElementById('routename').value;
-                const stationsContainer = document.getElementById('stations-container');
+            const stationsContainer = document.getElementById('stations-container');
             const stationElements = stationsContainer.getElementsByTagName('span');
             const stations = Array.from(stationElements).map((span) => span.textContent);
-    
+
             const formData = {
                 routeName: routeName,
                 stations: stations,
             };
-    
+
             fetch('/addroute', {
                 method: 'POST',
                 headers: {
@@ -251,16 +256,16 @@
                 },
                 body: JSON.stringify(formData),
             })
-            .then((response) => {
-                if (response.ok) {
-                    console.log('Route created successfully!');
-                } else {
-                    console.error('Failed to create route');
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error.message);
-            });
+                .then((response) => {
+                    if (response.ok) {
+                        console.log('Route created successfully!');
+                    } else {
+                        console.error('Failed to create route');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error.message);
+                });
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD05VOHJUj5MAawaXwZK1PUpq6KZpvYde8&callback=initMap"
