@@ -60,7 +60,7 @@
 
             <div id="stations-container"></div>
 
-            <button type="submit" onclick="sendData()">Create Route</button> 
+            <button type="submit" onclick="sendData()">Create Route</button>
         </fieldset>
     </form>
 
@@ -68,25 +68,6 @@
         var stations = [];
 
         function fetchStationsFromDatabase() {
-            const stations = [];
-            fetch('http://localhost:8080/api/stations')
-                .then((response) => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to fetch stations');
-                    }
-                })
-                .then((data) => {
-                    data.forEach((station) => {
-                        stations.push(station.name);
-                    });
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            return stations;
             return new Promise((resolve, reject) => {
                 fetch('http://localhost:8080/api/stations')
                     .then((response) => {
@@ -242,16 +223,6 @@
                             addSelected(marker.title);
                             console.log('Marker Clicked:', marker.title);
                         });
-                    });
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-                        google.maps.event.addListener(marker, 'click', function () {
-                            addSelected(marker.title);
-                            console.log('Marker Clicked:', marker.title);
-                        });
                         console.log(data);
                     })
                         .catch((error) => {
@@ -275,13 +246,6 @@
         function sendData() {
             const routeName = document.getElementById('routename').value;
             const stationsContainer = document.getElementById('stations-container');
-            const stationElements = stationsContainer.getElementsByTagName('span');
-            const stations = Array.from(stationElements).map((span) => span.textContent);
-
-            const formData = {
-                routeName: routeName,
-                stations: stations,
-            const stationsContainer = document.getElementById('stations-container');
             const stationElements = stationsContainer.getElementsByTagName('div');
 
             const stations = Array.from(stationElements).map((div) => {
@@ -291,8 +255,6 @@
                 name: routeName,
                 stationList: stations,
             };
-
-            fetch('/addroute', {
             console.log(formData);
             fetch('http://localhost:8080/api/routes', {
                 method: 'POST',
@@ -301,16 +263,6 @@
                 },
                 body: JSON.stringify(formData),
             })
-                .then((response) => {
-                    if (response.ok) {
-                        console.log('Route created successfully!');
-                    } else {
-                        console.error('Failed to create route');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error.message);
-                });
                 .then(response => {
                     if (!response.ok) {
                         return response.json().then(
