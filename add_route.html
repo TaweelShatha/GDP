@@ -47,7 +47,7 @@
     </div>
 
 
-    <form onsubmit="sendData()" method="post" style="padding: 1%;">
+    <form style="padding: 1%;">
         <fieldset>
             <label for="routename">Route Name:</label>
             <input type="text" id="routename" name="routename" readonly required><br>
@@ -60,7 +60,7 @@
 
             <div id="stations-container"></div>
 
-            <button type="submit" id="submitBtn" disabled>Create Route</button>
+            <button type="submit" onclick="sendData()">Create Route</button>
         </fieldset>
     </form>
 
@@ -68,44 +68,49 @@
         var stations = [];
 
         function fetchStationsFromDatabase() {
-            const stations = [];
-            fetch('http://localhost:8080/api/stations')
-                .then((response) => {
-                    if (response.status === 200) {
-                        return response.json();
-                    } else {
-                        throw new Error('Failed to fetch stations');
-                    }
-                })
-                .then((data) => {
-                    data.forEach((station) => {
-                        stations.push(station.name);
+            return new Promise((resolve, reject) => {
+                fetch('http://localhost:8080/api/stations')
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to fetch stations');
+                        }
+                    })
+                    .then((data) => {
+                        const stations = data.map((station) => station.name);
+                        console.log(stations);
+                        resolve(stations);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        reject(error);
                     });
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-            return stations;
+            });
         }
 
         function populateStationDropdown() {
             var stationDropdown = document.getElementById('station');
-            var stationOptions = fetchStationsFromDatabase();
+            fetchStationsFromDatabase()
+                .then((stationOptions) => {
+                    stationDropdown.innerHTML = '';
+                    var defaultOption = document.createElement('option');
+                    defaultOption.text = 'Select a station';
+                    defaultOption.value = '';
+                    stationDropdown.add(defaultOption);
 
-            stationDropdown.innerHTML = '';
+                    for (var i = 0; i < stationOptions.length; i++) {
+                        var option = document.createElement('option');
+                        option.text = stationOptions[i];
+                        option.value = stationOptions[i];
+                        stationDropdown.add(option);
+                    }
 
-            var defaultOption = document.createElement('option');
-            defaultOption.text = 'Select a station';
-            defaultOption.value = '';
-            stationDropdown.add(defaultOption);
+                })
+                .catch((error) => {
+                    console.error('Error in another function:', error);
+                });
 
-            for (var i = 0; i < stationOptions.length; i++) {
-                var option = document.createElement('option');
-                option.text = stationOptions[i];
-                option.value = stationOptions[i];
-                stationDropdown.add(option);
-            }
         }
 
         function addSelectedStation() {
@@ -218,13 +223,13 @@
                             addSelected(marker.title);
                             console.log('Marker Clicked:', marker.title);
                         });
-                    });
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+                        console.log(data);
+                    })
+                        .catch((error) => {
+                            console.error(error);
+                        });
 
+                });
         }
         function openMapModal() {
             $('#mapModal').modal('show');
@@ -241,31 +246,38 @@
         function sendData() {
             const routeName = document.getElementById('routename').value;
             const stationsContainer = document.getElementById('stations-container');
-            const stationElements = stationsContainer.getElementsByTagName('span');
-            const stations = Array.from(stationElements).map((span) => span.textContent);
+            const stationElements = stationsContainer.getElementsByTagName('div');
 
-            const formData = {
-                routeName: routeName,
-                stations: stations,
+            const stations = Array.from(stationElements).map((div) => {
+                return { name: div.textContent };
+            });
+            var formData = {
+                name: routeName,
+                stationList: stations,
             };
-
-            fetch('/addroute', {
+            console.log(formData);
+            fetch('http://localhost:8080/api/routes', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(formData),
             })
-                .then((response) => {
-                    if (response.ok) {
-                        console.log('Route created successfully!');
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(
+                            data => {
+                                alert(data.message)
+                            })
+
                     } else {
-                        console.error('Failed to create route');
+                        alert('Route Add Successfully')
+
                     }
+
+                }).then(data => {
+                    console.log(data);
                 })
-                .catch((error) => {
-                    console.error('Error:', error.message);
-                });
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD05VOHJUj5MAawaXwZK1PUpq6KZpvYde8&callback=initMap"
