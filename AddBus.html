@@ -31,6 +31,9 @@
 
     <form  onsubmit="sendData()" style="padding-left: 20px; padding-right: 20px;">
         <fieldset>
+            <label for="permitNumber">Permit Number:</label>
+            <input type="text" id="permitNumber" name="permitNumber" required>
+            <br>
             <label for="driverSelect">Assign a driver:</label>
             <select id="driverSelect" name="driver" required>
             </select>
@@ -39,20 +42,52 @@
             <select id="routeSelect" name="route" required>
             </select>
             <br>
-            <label for="permitNumber">Permit Number:</label>
-            <input type="text" id="permitNumber" name="permitNumber" required>
-            <br>
+           
             <button type="submit" >Create Bus</button>
         </fieldset>
     </form>
 
     <script>
         function getDriversFromDatabase() {
-            return ["Driver 1", "Driver 2", "Driver 3"];
+            return new Promise((resolve, reject) => {
+                fetch('http://localhost:8080/api/drivers/unassigned')
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to fetch drivers');
+                        }
+                    })
+                    .then((data) => {
+                        const drivers = data.map((driver) => driver.username);
+                        resolve(drivers);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        reject(error);
+                    });
+            });
         }
     
         function getRoutesFromDatabase() {
-            return ["Route A", "Route B", "Route C"];
+            return new Promise((resolve, reject) => {
+                fetch('http://localhost:8080/api/routes')
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to fetch stations');
+                        }
+                    })
+                    .then((data) => {
+                        const routes = data.map((route) => route.name);
+                        resolve(routes);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        reject(error);
+                    });
+            });
         }
         function populateDropdown(selectId, data) {
             var selectElement = document.getElementById(selectId);
@@ -66,37 +101,50 @@
             });
         }
         window.onload = function () {
-            var drivers = getDriversFromDatabase();
-            var routes = getRoutesFromDatabase();
-    
-            populateDropdown('driverSelect', drivers);
-            populateDropdown('routeSelect', routes);
+            getRoutesFromDatabase().then((routes) => {
+             populateDropdown('routeSelect', routes);
+            });
+
+            getDriversFromDatabase().then((drivers) => {
+             populateDropdown('driverSelect', drivers);
+            })
+            
+            
         };
         function sendData() {
-            var driver = document.getElementById('driverSelect').value;
-            var route = document.getElementById('routeSelect').value;
+            var driver = {username:document.getElementById('driverSelect').value};
+            var route = {name:document.getElementById('routeSelect').value};
             var permit = document.getElementById('permitNumber').value;
 
-            var data = {
+            var formData = {
+                permitNumber:permit,
                 driver: driver,
                 route: route,
-                permit: permit,
             };
 
-            fetch('/addBus', {
+            fetch('http://localhost:8080/api/buss', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(formData)
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Response:', data);
+            .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(
+                            data => {
+                                alert(data.message)
+                            })
+
+                    } else {
+                        alert('Bus Add Successfully')
+                        return response.json();
+
+                    }
+
+                }).then(data => {
+                    console.log(data);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         }
 
     </script>
